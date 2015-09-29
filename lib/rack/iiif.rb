@@ -1,4 +1,5 @@
 require 'rack'
+require 'iiif'
 
 module Rack
   ##
@@ -38,8 +39,16 @@ module Rack
       ##
       # @param [Hash] env
       # @return [Array<Integer, Hash, IIIF::Response>] the response
-      def call(env)
-        @app.call(env)
+      def call(env)        
+        status, headers, response = @app.call(env)
+        response = response_from_path(env['PATH_INFO'])
+        [status, headers, response]
+      end
+      
+      private 
+      
+      def response_from_path(path)
+        ::IIIF::InfoResponse.new
       end
     end
   end

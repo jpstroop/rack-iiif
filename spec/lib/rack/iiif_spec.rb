@@ -9,9 +9,11 @@ describe 'middleware' do
     double("Target Rack Application", :call => [200, headers, []])
   end
 
-  let(:app) { described_class.new(base_app) }
+  let(:app) { subject }
 
   describe Rack::IIIF::Handler do
+    subject { described_class.new(base_app) }
+
     describe '#call' do
       it 'returns a 200 status code' do
         get '/'
@@ -26,8 +28,19 @@ describe 'middleware' do
   end
 
   describe Rack::IIIF::Router do
+    subject { described_class.new(base_app) }
+
     describe '#call' do
-      it { expect { get('/') }.not_to raise_error }
+      describe 'info.json' do
+        
+        let(:id) { 'foo%2Fbar' }
+        
+        it 'recognizes info.json paths' do
+          response = subject.call('PATH_INFO' => "/#{id}/info.json")
+
+          expect(response.last.type).to eq :info
+        end
+      end
     end
   end
 end
