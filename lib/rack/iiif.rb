@@ -48,7 +48,14 @@ module Rack
       private 
       
       def response_from_path(path)
-        ::IIIF::InfoResponse.new
+        id, rest = tokenize(path)
+        return ::IIIF::InfoResponse.new(id: id) if ['info.json', nil].include? rest
+      end
+
+      def tokenize(path)
+        tokens = path.split('/')
+        tokens.shift if tokens.first == ''
+        tokens
       end
     end
   end

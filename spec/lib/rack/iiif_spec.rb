@@ -31,14 +31,40 @@ describe 'middleware' do
     subject { described_class.new(base_app) }
 
     describe '#call' do
-      describe 'info.json' do
-        
-        let(:id) { 'foo%2Fbar' }
-        
-        it 'recognizes info.json paths' do
-          response = subject.call('PATH_INFO' => "/#{id}/info.json")
+      let(:ids) { ['foo', 'foo%2Fbar'] }
 
-          expect(response.last.type).to eq :info
+      shared_examples 'info responses' do 
+        it 'recognizes info.json paths' do
+          paths.each do |path|
+            response = subject.call('PATH_INFO' => path)
+            expect(response.last.type).to eq :info
+          end
+        end
+
+        it 'gives response with correct id' do
+          paths.each_with_index do |path, idx|
+            response = subject.call('PATH_INFO' => path)
+            expect(response.last.id).to eq ids[idx]
+          end
+        end
+      end
+
+      describe 'base uri' do
+        include_examples 'info responses' do
+          let(:paths) { ids.map { |id| "/#{id}" } }
+        end
+      end
+
+      describe 'info.json' do
+        include_examples 'info responses' do
+          let(:paths) { ids.map { |id| "/#{id}/info.json" } }
+        end
+      end
+
+      describe 'not info.json' do
+        it 'does not give an info response' do
+          expect(subject.call('PATH_INFO' => "/#{ids.first}/blah/blah").last)
+            .not_to be_a ::IIIF::InfoResponse
         end
       end
     end
