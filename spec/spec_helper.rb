@@ -1,4 +1,6 @@
 require "bundler/setup"
+require 'pry'
+
 require 'rack/iiif'
 
 Dir['./spec/support/**/*.rb'].each { |f| require f }
