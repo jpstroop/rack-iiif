@@ -11,11 +11,11 @@ Gem::Specification.new do |gem|
   gem.summary            = 'IIIF support for Rack Servers'
   gem.description        = 'IIIF'
 
-  gem.authors            = ['Tom Johnson']
-  gem.email              = 'tom@dp.la'
+  gem.authors            = ['Tom Johnson', 'Jon Stroop']
+  gem.email              = 'iiif-discuss@googlegroups.com'
 
   gem.platform           = Gem::Platform::RUBY
-  gem.files              = %w(AUTHORS CHANGELOG.md README.md UNLICENSE VERSION) + 
+  gem.files              = %w(AUTHORS CHANGELOG.md README.md UNLICENSE VERSION) +
                            Dir.glob('lib/**/*.rb') + Dir.glob('app/**/*.rb')
   gem.default_executable = gem.executables.first
   gem.require_paths      = %w(lib app)
