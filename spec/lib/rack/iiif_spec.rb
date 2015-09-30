@@ -94,8 +94,10 @@ describe 'middleware' do
         end
 
         it 'redirects to `info.json`' do
-          expect(subject.call('PATH_INFO' => "/moomin").last.target)
-            .to end_with '/moomin/info.json'
+          ['/moomin', '/moomin/'].each do |path|
+            expect(subject.call('PATH_INFO' => path).last.target)
+              .to end_with '/moomin/info.json'
+          end
         end
       end
 
@@ -105,7 +107,14 @@ describe 'middleware' do
         end
       end
 
-      describe 'not info.json' do
+      describe 'image response' do
+        let(:path) { }
+        
+        it '' do
+        end
+      end
+
+      describe 'nonsense request' do
         it 'does not give an info response' do
           expect(subject.call('PATH_INFO' => "/#{ids.first}/blah/blah").last)
             .not_to be_a ::IIIF::InfoResponse
