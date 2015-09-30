@@ -24,6 +24,21 @@ describe 'middleware' do
         get '/'
         expect(last_response.headers).to eq headers
       end
+
+      context 'with HTTP error' do
+        before { allow(base_app).to receive(:call).and_raise(error_class) }
+        let(:error_class) { IIIF::RequestError }
+        
+        it 'returns an error status' do
+          get '/'
+          expect(last_response.status).to eq error_class::STATUS
+        end
+
+        it 'returns message status' do
+          get '/'
+          expect(last_response.body).to eq error_class.new.message
+        end
+      end
     end
   end
 
