@@ -52,12 +52,16 @@ module Rack
       end
       
       private 
+
+      def self.to_info_uri(request_uri)
+        request_uri = request_uri [0..-2] if request_uri.end_with? '/'
+        return request_uri + '/info.json'
+      end
       
       def build_response(request)
         id, rest = tokenize(request.path)
         return ::IIIF::InfoResponse.new(id: id) if rest == 'info.json'
-        return ::IIIF::RedirectResponse.new("#{request.url}/info.json") if 
-          rest == nil
+        return ::IIIF::RedirectResponse.new(self.class.to_info_uri(request.url)) if rest == nil
       end
 
       def tokenize(path)
