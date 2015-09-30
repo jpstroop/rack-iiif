@@ -2,8 +2,12 @@ require 'json'
 
 module IIIF
   class InfoResponse < Response
+    # @!attribute [r] id
+    #   @return [String] the id
     attr_reader :id
 
+    ##
+    # @param [String] id
     def initialize(id:)
       @id = id
       @status = 200
@@ -15,6 +19,8 @@ module IIIF
       :info
     end
 
+    ##
+    # @return [String] a JSON body
     def body
       {}.to_json
     end

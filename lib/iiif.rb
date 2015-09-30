@@ -3,6 +3,7 @@
 module IIIF
   autoload :Response,         'iiif/response'
   autoload :InfoResponse,     'iiif/info_response'
+  autoload :ImageResponse,    'iiif/image_response'
   autoload :RedirectResponse, 'iiif/redirect_response'
 
   ##
