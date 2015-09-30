@@ -22,8 +22,8 @@ module Rack
       def call(env)
         status, headers, response = @app.call(env)
         [status, headers, response]
-      # rescue MyErrorType => e
-      #   [e.status, e.headers, [e.message]]
+      rescue ::IIIF::RequestError => e
+        [e.status, e.headers, [e.message]]
       end
     end
 
