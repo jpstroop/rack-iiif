@@ -59,9 +59,21 @@ module Rack
       end
       
       def build_response(request)
-        id, rest = tokenize(request.path)
-        return ::IIIF::InfoResponse.new(id: id) if rest == 'info.json'
-        return ::IIIF::RedirectResponse.new(self.class.to_info_uri(request.url)) if rest == nil
+        id, *rest = tokenize(request.path)
+        if rest.empty?
+          ::IIIF::RedirectResponse.new(self.class.to_info_uri(request.url))
+        elsif rest.length == 1 && rest.first == 'info.json'
+          ::IIIF::InfoResponse.new(id: id)
+        elsif rest.length == 4 && rest.last.include?('.')
+          region, size, rotation, qualform = rest
+          quality, format = qualform.split('.')
+          ::IIIF::ImageResponse.new(id:       id,
+                                    region:   region,
+                                    size:     size,
+                                    rotation: rotation,
+                                    quality:  quality,
+                                    format:   format)
+        end
       end
 
       def tokenize(path)

@@ -108,9 +108,30 @@ describe 'middleware' do
       end
 
       describe 'image response' do
-        let(:path) { }
+        let(:path) do
+          "#{id}/#{region}/#{size}/#{rotation}/#{quality}.#{format}"
+        end
+
+        let(:id) { 'moomin' }
+        let(:region) { 'full' }
+        let(:size) { 'full' }
+        let(:rotation) { '0' }
+        let(:quality) { 'default' }
+        let(:format) { 'jpg' }
         
-        it '' do
+        it 'is an image response' do
+          expect(subject.call('PATH_INFO' => path).last)
+            .to be_a ::IIIF::ImageResponse
+        end
+
+        it 'sets the attributes' do
+          expect(subject.call('PATH_INFO' => path).last)
+            .to have_attributes(id:     id,
+                                region: region,
+                                size:   size,
+                                rotation: rotation,
+                                quality: quality,
+                                format: format)
         end
       end
 
@@ -118,6 +139,11 @@ describe 'middleware' do
         it 'does not give an info response' do
           expect(subject.call('PATH_INFO' => "/#{ids.first}/blah/blah").last)
             .not_to be_a ::IIIF::InfoResponse
+        end
+
+        it 'does not give an image response' do
+          expect(subject.call('PATH_INFO' => "/#{ids.first}/blah/blah").last)
+            .not_to be_a ::IIIF::ImageResponse
         end
       end
     end
