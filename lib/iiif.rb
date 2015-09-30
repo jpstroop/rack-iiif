@@ -1,8 +1,9 @@
 ##
 # IIIF behavior for use with Rack::IIIF middleware
 module IIIF
-  autoload :Response,     'iiif/response'
-  autoload :InfoResponse, 'iiif/info_response'
+  autoload :Response,         'iiif/response'
+  autoload :InfoResponse,     'iiif/info_response'
+  autoload :RedirectResponse, 'iiif/redirect_response'
 
   ##
   # A base class for HTTP request errors.

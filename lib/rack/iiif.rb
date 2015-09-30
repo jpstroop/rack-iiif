@@ -21,6 +21,9 @@ module Rack
       # @param [Hash] env
       def call(env)
         status, headers, response = @app.call(env)
+
+        return response.to_response(headers) if 
+          response.respond_to? :to_response
         [status, headers, response]
       rescue ::IIIF::RequestError => e
         [e.status, e.headers, [e.message]]
@@ -39,17 +42,22 @@ module Rack
       ##
       # @param [Hash] env
       # @return [Array<Integer, Hash, IIIF::Response>] the response
+      #
+      # @todo handle paths other than base '/'; see prefix at 
+      #   http://iiif.io/api/image/2.1/#uri-syntax
       def call(env)        
         status, headers, response = @app.call(env)
-        response = response_from_path(env['PATH_INFO'])
+        response = build_response(Rack::Request.new(env))
         [status, headers, response]
       end
       
       private 
       
-      def response_from_path(path)
-        id, rest = tokenize(path)
-        return ::IIIF::InfoResponse.new(id: id) if ['info.json', nil].include? rest
+      def build_response(request)
+        id, rest = tokenize(request.path)
+        return ::IIIF::InfoResponse.new(id: id) if rest == 'info.json'
+        return ::IIIF::RedirectResponse.new("#{request.url}/info.json") if 
+          rest == nil
       end
 
       def tokenize(path)

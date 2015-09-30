@@ -5,8 +5,10 @@ describe 'middleware' do
   include ::Rack::Test::Methods
 
   let(:headers) { { header: 'value' } }
+  let(:body) { [] }
+
   let(:base_app) do
-    double("Target Rack Application", :call => [200, headers, []])
+    double("Target Rack Application", :call => [200, headers, body])
   end
 
   let(:app) { subject }
@@ -39,6 +41,27 @@ describe 'middleware' do
           expect(last_response.body).to eq error_class.new.message
         end
       end
+
+      context 'with a RedirectResponse' do
+        let(:uri_target) { 'http://ex.org/moomin' }
+        let(:body) { IIIF::RedirectResponse.new(uri_target) }
+        let(:headers) { { header: 'value', 'Location' => 'moomin' } }
+        
+        it 'gives redirect status code' do
+          get '/'
+          expect(last_response.status).to eq body.status
+        end
+
+        it 'gives target in location header' do
+          get '/'
+          expect(last_response.headers['Location']).to eq uri_target
+        end
+
+        it 'retains existing headers' do
+          get '/'
+          expect(last_response.headers[:header]).to eq headers[:header]
+        end
+      end
     end
   end
 
@@ -65,8 +88,14 @@ describe 'middleware' do
       end
 
       describe 'base uri' do
-        include_examples 'info responses' do
-          let(:paths) { ids.map { |id| "/#{id}" } }
+        it 'gives redirect response' do
+          expect(subject.call('PATH_INFO' => "/moomin").last)
+            .to be_a IIIF::RedirectResponse
+        end
+
+        it 'redirects to `info.json`' do
+          expect(subject.call('PATH_INFO' => "/moomin").last.target)
+            .to end_with '/moomin/info.json'
         end
       end
 
