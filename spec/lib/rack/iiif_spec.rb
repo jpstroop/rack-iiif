@@ -21,7 +21,7 @@ describe 'middleware' do
         get '/'
         expect(last_response.status).to eq 200
       end
-      
+
       it 'retains headers' do
         get '/'
         expect(last_response.headers).to eq headers
@@ -30,7 +30,7 @@ describe 'middleware' do
       context 'with HTTP error' do
         before { allow(base_app).to receive(:call).and_raise(error_class) }
         let(:error_class) { IIIF::RequestError }
-        
+
         it 'returns an error status' do
           get '/'
           expect(last_response.status).to eq error_class::STATUS
@@ -46,7 +46,7 @@ describe 'middleware' do
         let(:uri_target) { 'http://ex.org/moomin' }
         let(:body) { IIIF::RedirectResponse.new(uri_target) }
         let(:headers) { { header: 'value', 'Location' => 'moomin' } }
-        
+
         it 'gives redirect status code' do
           get '/'
           expect(last_response.status).to eq body.status
@@ -71,7 +71,7 @@ describe 'middleware' do
     describe '#call' do
       let(:ids) { ['foo', 'foo%2Fbar'] }
 
-      shared_examples 'info responses' do 
+      shared_examples 'info responses' do
         it 'recognizes info.json paths' do
           paths.each do |path|
             response = subject.call('PATH_INFO' => path)
@@ -118,20 +118,16 @@ describe 'middleware' do
         let(:rotation) { '0' }
         let(:quality) { 'default' }
         let(:format) { 'jpg' }
-        
+
         it 'is an image response' do
           expect(subject.call('PATH_INFO' => path).last)
             .to be_a ::IIIF::ImageResponse
         end
 
-        it 'sets the attributes' do
-          expect(subject.call('PATH_INFO' => path).last)
-            .to have_attributes(id:     id,
-                                region: region,
-                                size:   size,
-                                rotation: rotation,
-                                quality: quality,
-                                format: format)
+        [:id, :region, :size, :rotation, :quality, :format].each do |p|
+          it "sets the #{p}" do
+            expect(subject.call('PATH_INFO' => path).last.send(p)).not_to be_nil
+          end
         end
       end
 
