@@ -43,4 +43,12 @@ module IIIF
   class MethodNotAllowed < RequestError
     STATUS = 405
   end
+
+  ##
+  # An error for 501 Not Implemented responses
+  #
+  # @see IIIF::RequestError
+  class NotImplemented < RequestError
+    STATUS = 501
+  end
 end

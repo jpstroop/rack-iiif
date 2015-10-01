@@ -17,4 +17,15 @@ describe IIIF::ImageResponse do
   let(:quality) { 'default' }
   let(:format) { 'jpg' }
 
+  describe '#region=' do
+    it 'converts to region value' do
+      expect { subject.region = 'moomin' }.to change { subject.region }.to an_instance_of IIIF::ImageResponse::Region
+    end
+  end
+
+  describe '#rotation=' do
+    it 'converts to rotation value' do
+      expect { subject.rotation = 'moomin' }.to change { subject.rotation }.to an_instance_of IIIF::ImageResponse::Rotation
+    end
+  end
 end
