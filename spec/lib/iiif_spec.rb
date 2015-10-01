@@ -1,7 +1,39 @@
 require 'spec_helper.rb'
 
 describe IIIF do
+  describe '#configure' do
+    it 'yields self' do
+      expect { |b| described_class.configure(&b) }
+        .to yield_with_args(IIIF::Configuration.instance)
+    end
+  end
 end
+
+describe IIIF::Configuration do
+  after { subject.reset! }
+
+  subject { described_class.instance }
+  let(:resolver) { double('resolver') }
+
+  describe '#add_resolver' do
+    it 'adds a resolver' do
+      expect { subject.add_resolver(:sym, resolver) }.to change { subject.resolvers }.to include(:sym)
+    end
+  end
+
+  describe '#resolvers' do
+    it 'is empty' do
+      expect(subject.resolvers).to be_empty
+    end
+
+    it 'has resolver' do
+      subject.add_resolver(:sym, resolver)
+      
+      expect(subject.resolvers[:sym]).to eq resolver
+    end
+  end
+end
+  
 
 shared_examples 'a RequestError' do
   describe '#status' do
