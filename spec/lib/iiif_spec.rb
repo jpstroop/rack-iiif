@@ -21,6 +21,13 @@ describe IIIF::Configuration do
     end
   end
 
+  describe '#add_transcoder' do
+    it 'adds the transcoder' do
+      transcoder = double('transcoder')
+      expect { subject.add_transcoder(transcoder) }.to change { subject.transcoders.all }.from([]).to(a_collection_containing_exactly(transcoder))
+    end
+  end
+
   describe '#resolvers' do
     it 'is empty' do
       expect(subject.resolvers).to be_empty

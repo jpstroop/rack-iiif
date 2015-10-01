@@ -18,6 +18,12 @@ describe IIIF::Image do
     end
   end
 
+  describe '#formats' do
+    it 'is an array' do
+      expect(subject.formats).to be_a Array
+    end
+  end
+
   describe '#info' do
     let(:info) { double('image info') }
 
@@ -39,12 +45,22 @@ describe IIIF::Image do
       expect { subject.to_nonsense }.to raise_error NoMethodError
     end
 
-    it 'transcodes to supported format' do
-      allow(subject).to receive(:formats).and_return([:jpg])
-      region, size, rotation, quality = [double, double, double, double]
+    context 'with supported format' do
+      before { allow(subject).to receive(:formats).and_return([:jpg]) }
       
-      expect(subject.to_jpg(region, size, rotation, quality))
-        .to respond_to(:read)
+      let(:region) { double('region')  }
+      let(:size) { double('size')  }
+      let(:rotation) { double('rotation')  }
+      let(:quality) { double('quality')  }
+
+      it 'transcodes to supported format' do
+        expect(subject.to_jpg(region, size, rotation, quality))
+          .to respond_to(:read)
+      end
+
+      it 'knows it responds to supported format' do
+        expect(subject).to respond_to(:to_jpg)
+      end
     end
   end
 end

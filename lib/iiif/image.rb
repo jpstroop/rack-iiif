@@ -31,7 +31,7 @@ module IIIF
     ##
     # @return [Array<Symbol>] an array of formats supported by this image
     def formats
-      []
+      IIIF::Configuration.instance.transcoders.formats_for(source_format)
     end
 
     ##
@@ -39,15 +39,27 @@ module IIIF
     #   my_image.to_jpg(region, size, rotation, quality)
     #
     def method_missing(name, *args, &block)
-      if name[0..2] == 'to_'
-        format = name[3..-1].to_sym
-        return transcode(*args, format) if formats.include?(format)
-      end
-
+      format = method_to_format_symbol(name)
+      return transcode(*args, format) if format
       super
     end
 
+    def respond_to_missing?(name, include_private = false)
+      !method_to_format_symbol(name).nil? || super
+    end
+
     private
+
+    ##
+    # @param [String] name  method name
+    # @return [Symbol, nil] gives the format symbol if the name is of form
+    #   `to_{format}` and matches a supported format
+    def method_to_format_symbol(name)
+      return nil unless name[0..2] == 'to_' 
+      format_sym = name[3..-1].to_sym
+      return format_sym if formats.include?(format_sym)
+      nil
+    end
 
     ##
     # @return [IO] the file contents
