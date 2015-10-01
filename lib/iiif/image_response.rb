@@ -34,13 +34,17 @@ module IIIF
       @id            = id
       self.region    = region
       @size          = size
-      @rotation      = rotation
+      self.rotation  = rotation
       @quality       = quality
       @format        = format
     end
 
     def region=(value)
       @region = Region.new(value)
+    end
+
+    def rotation=(value)
+      @rotation = Rotation.new(value)
     end
   end
 end
