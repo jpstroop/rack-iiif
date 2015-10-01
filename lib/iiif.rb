@@ -9,10 +9,16 @@ require 'singleton'
 #   end
 #
 module IIIF
-  autoload :Response,         'iiif/response'
-  autoload :InfoResponse,     'iiif/info_response'
-  autoload :ImageResponse,    'iiif/image_response'
-  autoload :RedirectResponse, 'iiif/redirect_response'
+  autoload :Image,              'iiif/image'
+  autoload :Resolver,           'iiif/resolver'
+  autoload :ImageInfoExtractor, 'iiif/image_info_extractor'
+  autoload :TranscoderRegistry, 'iiif/transcoder_registry'
+
+  # responses
+  autoload :Response,           'iiif/response'
+  autoload :InfoResponse,       'iiif/info_response'
+  autoload :ImageResponse,      'iiif/image_response'
+  autoload :RedirectResponse,   'iiif/redirect_response'
 
   ##
   # Server-wide configuration
@@ -38,6 +44,18 @@ module IIIF
     # @param [IIIF::Resolver] resolver  a resolver instance
     def add_resolver(name, resolver)
       @resolvers[name] = resolver
+    end
+
+    ##
+    # @param [IIIF::Transcoder] resolver  a resolver instance
+    def add_transcoder(transcoder)
+      transcoders.add(transcoder)
+    end
+
+    ##
+    # @return [TranscoderRegistry] the registered transcoders
+    def transcoders
+      TranscoderRegistry.instance
     end
   end
 
