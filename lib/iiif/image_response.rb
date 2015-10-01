@@ -83,7 +83,7 @@ module IIIF
     # @todo add better error messages
     class Region < Parameter
       attr_reader :x,:y,:w,:h
-      REGEX = /^(?:full)|(?:(?:pct:)?([\d]+,){3}([\d]+))$/
+      REGEX = /^(?:full)|(?:square)|(?:(?:pct:)?([\d]+,){3}([\d]+))$/
 
       ##
       # @param [String] requested_value
@@ -105,8 +105,17 @@ module IIIF
       # @return [Boolean]
       #
       # @todo: checking the regex more thoroughly
-      def valid?
+      def valid? 
+        return false if square?
         REGEX =~ @requested_value && ![w,h].include?(0)
+      end
+
+      ##
+      # @see Parameter#validate!
+      def validate!
+        raise(IIIF::NotImplemented, '`square` regions are not supported!') if
+          square?
+        super
       end
 
       ##
@@ -122,6 +131,12 @@ module IIIF
       # @return [Boolean]
       def pct?
         @requested_value.start_with?('pct:') && !full?
+      end
+
+      ##
+      # @return [Boolean]
+      def square?
+        @requested_value == 'square'
       end
 
       private
@@ -160,7 +175,7 @@ module IIIF
     end
 
     ##
-    #
+    # 
     class Size < Parameter
     end
 

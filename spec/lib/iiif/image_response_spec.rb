@@ -38,6 +38,19 @@ shared_examples 'a parameter' do
   end
 
   describe '#validate!' do
+    it 'succeeds if valid' do
+      valids.each do |valid|
+        expect { described_class.new(valid, *args).validate! }
+          .not_to raise_error 
+      end
+    end
+
+    it 'raises an error if invalid' do
+      invalids.each do |invalid|
+        expect { described_class.new(invalid, *args).validate! }
+          .to raise_error IIIF::RequestError
+      end
+    end
   end
 end
 
@@ -56,6 +69,13 @@ describe IIIF::ImageResponse::Region do
   end
 
   subject { described_class.new('1,2,3,4', 100, 100) }
+
+  describe 'validate!' do
+    it 'raises Not Implemented on `square`' do
+      expect { described_class.new('square').validate! }
+        .to raise_error IIIF::NotImplemented
+    end
+  end
   
   describe '#valid?' do
     it 'is not valid with silly percentages' do
