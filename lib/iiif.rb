@@ -1,10 +1,49 @@
+require 'singleton'
+
 ##
 # IIIF behavior for use with Rack::IIIF middleware
+#
+# @example configuration
+#   IIIF.configure do |config|
+#     config.add_resolver :my_resolver, my_resolver_instance
+#   end
+#
 module IIIF
   autoload :Response,         'iiif/response'
   autoload :InfoResponse,     'iiif/info_response'
   autoload :ImageResponse,    'iiif/image_response'
   autoload :RedirectResponse, 'iiif/redirect_response'
+
+  ##
+  # Server-wide configuration
+  class Configuration
+    include Singleton
+    
+    # @!attribute [r] resolvers
+    #   @return [Hash<Symbol, IIIF::Resolver>]
+    attr_reader :resolvers
+
+    def initialize
+      @resolvers = {}
+    end
+
+    ##
+    # Resets all configuration variables
+    def reset!
+      @resolvers.clear
+    end
+
+    ##
+    # @param [Symbol] name  a symbol representing the resolver key
+    # @param [IIIF::Resolver] resolver  a resolver instance
+    def add_resolver(name, resolver)
+      @resolvers[name] = resolver
+    end
+  end
+
+  def self.configure(&block)
+    yield Configuration.instance if block_given?
+  end
 
   ##
   # A base class for HTTP request errors.
