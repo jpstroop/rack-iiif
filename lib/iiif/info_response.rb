@@ -20,9 +20,9 @@ module IIIF
     end
 
     ##
-    # @return [String] a JSON body
+    # @return [Array<String>]  a Rack-friendly JSON body
     def body
-      {}.to_json
+      [{}.to_json]
     end
   end
 end

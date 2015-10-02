@@ -1,6 +1,8 @@
 require 'spec_helper.rb'
 
 describe IIIF::InfoResponse do
+  it_behaves_like 'a response'
+
   subject { described_class.new(id: ident) }
 
   let(:ident) { 'foo%2Fbar' }

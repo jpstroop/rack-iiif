@@ -39,6 +39,12 @@ module IIIF
       @format        = format
     end
 
+    ##
+    # @see [Symbol] :image
+    def type
+      :image
+    end
+
     def region=(value)
       @region = Region.new(value)
     end

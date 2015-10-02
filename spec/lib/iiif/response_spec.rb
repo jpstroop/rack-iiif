@@ -1,6 +1,8 @@
 require 'spec_helper.rb'
 
 describe IIIF::Response do
+  it_behaves_like 'a response'
+  
   it { is_expected.to be_a described_class }
 
   describe '#type' do

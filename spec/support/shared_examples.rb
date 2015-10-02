@@ -1,3 +1,30 @@
+shared_examples 'a response' do
+  describe '#to_response' do
+    it 'looks like a Rack response' do
+      expect(subject.to_response)
+        .to contain_exactly(a_kind_of(Integer),
+                            an_instance_of(Hash),
+                            respond_to(:each))
+    end
+
+    it 'retains headers passed in' do
+      headers = { 'KeepMe' => 'Moomin', 'OverwriteMe' => 'MoominPapa' }
+      subject.headers = { 'OverwriteMe' => 'MoominMama' }
+      
+      expect(subject.to_response(headers)[1])
+        .to eq({ 'KeepMe' => 'Moomin', 'OverwriteMe' => 'MoominMama' })
+    end
+
+    it 'has a type (or is not implemented)' do
+      if described_class == IIIF::Response
+        expect { subject.type }.to raise_error NotImplementedError
+      else
+        expect(subject.type).to be_a Symbol
+      end
+    end
+  end
+end
+
 shared_examples 'a parameter' do
   subject { described_class.new(valids.first, *args) }
 

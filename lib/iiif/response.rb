@@ -23,13 +23,17 @@ module IIIF
     # @return [Array<Integer, Hash, #each>] a rack response
     # @see http://www.rubydoc.info/github/rack/rack/master/file/SPEC
     def to_response(old_headers = {})
-      [status, old_headers.merge(headers), [body]]
+      [status, old_headers.merge(headers), body]
+    end
+
+    def status
+      @status ||= 500
     end
 
     ##
-    # @return [#each] a rack response body
+    # @return [#read] 
     def body
-      @body ||= ''
+      @body ||= ['']
     end
 
     ##
