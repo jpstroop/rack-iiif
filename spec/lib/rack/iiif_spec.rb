@@ -132,14 +132,10 @@ describe 'middleware' do
       end
 
       describe 'nonsense request' do
-        it 'does not give an info response' do
-          expect(subject.call('PATH_INFO' => "/#{ids.first}/blah/blah").last)
-            .not_to be_a ::IIIF::InfoResponse
-        end
+        it 'passes through' do
+          opts = { 'PATH_INFO' => "/#{ids.first}/blah/blah" }
 
-        it 'does not give an image response' do
-          expect(subject.call('PATH_INFO' => "/#{ids.first}/blah/blah").last)
-            .not_to be_a ::IIIF::ImageResponse
+          expect(subject.call(opts)).to eq base_app.call(opts)
         end
       end
     end

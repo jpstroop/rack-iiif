@@ -47,7 +47,7 @@ module Rack
       #   http://iiif.io/api/image/2.1/#uri-syntax
       def call(env)        
         status, headers, response = @app.call(env)
-        response = build_response(Rack::Request.new(env))
+        response = build_response(Rack::Request.new(env)) || response
         [status, headers, response]
       end
       
