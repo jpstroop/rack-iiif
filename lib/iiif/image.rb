@@ -6,18 +6,22 @@ module IIIF
     #   @return [String]
     # @!attribute [r] source_format
     #   @return [Symbol]
-    attr_reader :path, :source_format
+    # @!attribute [r] base_uri
+    #   @return [String]
+    attr_reader :path, :source_format, :base_uri
 
     ##
     # @param [String] path  a file path to the local copy of the image
     # @param [Symbol] source_format  a format symbol
+    # @param [String] base_uri  the json-ld @id (URI_ of the image
     # @param [Hash] info  the image info to be used in JSON responses
-    # @param [#extract] extracter  an extracter to create an info hash 
+    # @param [#extract] extractor  an extractor to create an info hash
     #   for this image
-    def initialize(path, source_format, info: nil, 
+    def initialize(path, source_format, base_uri, info: nil,
                    extractor: ImageInfoExtractor)
       @path = path
       @source_format = source_format
+      @base_uri = base_uri
       @info = info
       @extractor = extractor
     end
@@ -27,7 +31,7 @@ module IIIF
     def info
       @info ||= @extractor.extract(self)
     end
-    
+
     ##
     # @return [Array<Symbol>] an array of formats supported by this image
     def formats
@@ -35,7 +39,7 @@ module IIIF
     end
 
     ##
-    # @example 
+    # @example
     #   my_image.to_jpg(region, size, rotation, quality)
     #
     def method_missing(name, *args, &block)
@@ -55,7 +59,7 @@ module IIIF
     # @return [Symbol, nil] gives the format symbol if the name is of form
     #   `to_{format}` and matches a supported format
     def method_to_format_symbol(name)
-      return nil unless name[0..2] == 'to_' 
+      return nil unless name[0..2] == 'to_'
       format_sym = name[3..-1].to_sym
       return format_sym if formats.include?(format_sym)
       nil
