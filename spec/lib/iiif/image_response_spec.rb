@@ -1,6 +1,8 @@
 require 'spec_helper.rb'
 
 describe IIIF::ImageResponse do
+  it_behaves_like 'a response'
+
   subject do
     described_class.new(id:       id,
                         region:   region,

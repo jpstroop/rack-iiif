@@ -1,6 +1,8 @@
 require 'spec_helper.rb'
 
 describe IIIF::RedirectResponse do
+  it_behaves_like 'a response'
+
   subject { described_class.new(target, status) }
   
   let(:target) { 'http://example.org/moomin' }

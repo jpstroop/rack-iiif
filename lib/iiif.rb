@@ -1,11 +1,12 @@
 require 'singleton'
 
 ##
-# IIIF behavior for use with Rack::IIIF middleware
+# IIIF behavior for use with Rack::IIIF middleware.
 #
 # @example configuration
 #   IIIF.configure do |config|
 #     config.add_resolver :my_resolver, my_resolver_instance
+#     config.add_transcoder my_transcoder
 #   end
 #
 module IIIF
