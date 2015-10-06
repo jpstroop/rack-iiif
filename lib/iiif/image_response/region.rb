@@ -25,12 +25,12 @@ module IIIF
     def canonical_value
       @canonical_value ||= canonical_string
     end
-    
+
     ##
     # @return [Boolean]
     #
     # @todo: checking the regex more thoroughly
-    def valid? 
+    def valid?
       return false if square?
       REGEX =~ @requested_value && ![w,h].include?(0)
     end
@@ -47,9 +47,9 @@ module IIIF
     # @return [Boolean]
     def full?
       @full ||= begin
-                  @requested_value == 'full' || 
+                  @requested_value == 'full' ||
                     (!(w.nil? || h.nil?) && (w == @image_width && h == @image_height))
-                end 
+                end
     end
 
     ##
@@ -99,4 +99,3 @@ module IIIF
     end
   end
 end
-

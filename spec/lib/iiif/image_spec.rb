@@ -1,11 +1,11 @@
 require 'spec_helper.rb'
 
 describe IIIF::Image do
-  subject { described_class.new(path, source_format) }
-  
+  subject { described_class.new(path, source_format, base_uri) }
   let(:path) { 'path/to/file.jpg' }
-  let(:source_format) { :jpg }
-  
+  let(:source_format) { :jp2 }
+  let(:base_uri) { 'http://example.org/abc123' }
+
   describe '#path' do
     it 'is the path' do
       expect(subject.path).to eq path
@@ -15,6 +15,12 @@ describe IIIF::Image do
   describe '#source_format' do
     it 'is the source format' do
       expect(subject.source_format).to eq source_format
+    end
+  end
+
+  describe '#base_uri' do
+    it 'is the base_uri' do
+      expect(subject.base_uri).to eq base_uri
     end
   end
 
@@ -28,14 +34,14 @@ describe IIIF::Image do
     let(:info) { double('image info') }
 
     it 'can be set on initialization' do
-      image = described_class.new(path, source_format, info: info)
+      image = described_class.new(path, source_format, base_uri, info: info)
       expect(image.info).to eq info
     end
 
     it 'extracts its own image info' do
       extractor = double('ExtractorModule', extract: info)
-      image = described_class.new(path, source_format, extractor: extractor)
-      
+
+      image = described_class.new(path, source_format, base_uri, extractor: extractor)
       expect(image.info).to eq info
     end
   end
@@ -47,7 +53,7 @@ describe IIIF::Image do
 
     context 'with supported format' do
       before { allow(subject).to receive(:formats).and_return([:jpg]) }
-      
+
       let(:region) { double('region')  }
       let(:size) { double('size')  }
       let(:rotation) { double('rotation')  }

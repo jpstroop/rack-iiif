@@ -15,7 +15,7 @@ RSpec.configure do |config|
 end
 
 def fixture_path(filename)
-  File.join(File.dirname(__FILE__), 'data', filename)
+  File.join(File.dirname(__FILE__), 'fixtures', filename)
 end
 
 Encoding.default_external = Encoding::UTF_8
