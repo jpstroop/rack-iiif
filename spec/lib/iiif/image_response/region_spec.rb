@@ -112,4 +112,25 @@ describe IIIF::ImageResponse::Region do
       expect(described_class.new('pct:0,0,101,101', 1, 1)).not_to be_pct
     end
   end
+
+  describe '#square?' do
+    it 'is square' do
+      expect(described_class.new('square', 1, 1)).to be_square
+    end
+
+    it 'has square canonical value (height)' do
+      expect(described_class.new('square', 201, 100).canonical_value)
+        .to eq '50,0,100,100'
+    end
+
+    it 'has square canonical value (width)' do
+      expect(described_class.new('square', 100, 201).canonical_value)
+        .to eq '0,50,100,100'
+    end
+
+    it 'is full for an already square image' do
+      expect(described_class.new('square', 101, 101).canonical_value)
+        .to eq 'full'
+    end
+  end
 end

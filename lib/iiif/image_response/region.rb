@@ -48,7 +48,8 @@ module IIIF
     def full?
       @full ||= begin
                   @requested_value == 'full' ||
-                    (!(w.nil? || h.nil?) && (w == @image_width && h == @image_height))
+                    @requested_value == 'square' && @image_width == @image_height ||
+                    (!(w.nil? || h.nil?) && (w == @image_width && h == @image_height))                  
                 end
     end
 
@@ -78,6 +79,7 @@ module IIIF
     end
 
     def calculate_canonical
+      return calculate_square if square?
       x, y, w, h = @requested_value.split(':').last.split(',').map(&:to_i)
 
       if pct?
@@ -96,6 +98,13 @@ module IIIF
       @full = nil
 
       [x, y, w, h]
+    end
+
+    ##
+    # Gives x,y,w,h format for a square version of this image
+    def calculate_square
+      short = [@image_width, @image_height].min 
+      [(@image_width - short) / 2, (@image_height - short) / 2, short, short]
     end
   end
 end
