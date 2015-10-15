@@ -8,6 +8,7 @@ module IIIF
   class ImageInfoExtractor
 
     autoload :Jp2Extractor, 'iiif/image_info_extractor/jp2_extractor'
+    autoload :VipsExtractor, 'iiif/image_info_extractor/vips_extractor'
 
     CONTEXT_URI = "http://iiif.io/api/image/2/context.json"
     COMPLIANCE_URI = "http://iiif.io/api/image/2/level2.json"
@@ -28,14 +29,18 @@ module IIIF
             # TODO: we need 'formats' from the transcoder
             # TODO: we need 'supports' from ... somewhere. Could possibly
             # hard-code, though some of the > 2 features should probably
-            # optional 
+            # optional
           }
         ]
       }
-      fmt = image.source_format
-      return Jp2InfoExtractor.extract(info_seed, image.path) if fmt == 'jp2'
-      msg = "this server does not support #{fmt} as a source format"
-      raise NotImplementedError msg
+      if Jp2Extractor.formats.include?(image.source_format)
+        return Jp2Extractor.extract(info_seed, image.path)
+      elsif VipsExtractor.formats.include?(image.source_format)
+        return VipsExtractor.extract(info_seed, image.path)
+      else
+        msg = "this server does not support #{fmt} as a source format"
+        raise NotImplementedError msg
+      end
     end
 
   end

@@ -3,6 +3,7 @@ PATH
   specs:
     rack-iiif (0.0.1)
       rack (~> 1.6)
+      ruby-vips (~> 0.3.9)
       sinatra (~> 1.4)
 
 GEM
@@ -58,6 +59,7 @@ GEM
     rubinius-processor (2.3.0)
     rubinius-profiler (2.0.2)
     rubinius-toolset (2.3.1)
+    ruby-vips (0.3.9)
     rubysl (2.1.0)
       rubysl-abbrev (~> 2.0)
       rubysl-base64 (~> 2.0)
@@ -277,3 +279,6 @@ DEPENDENCIES
   rubinius (~> 2.0)
   rubysl (~> 2.0)
   yard (~> 0.8)
+
+BUNDLED WITH
+   1.10.6

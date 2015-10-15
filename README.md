@@ -11,6 +11,11 @@ Starting the Server
 
 Start the server with `bundle; bundle exec rackup`.
 
+Dependencies
+------------
+
+ * VIPS is required, as least for now. See [ruby-vips#installation-prerequisites]](https://github.com/jcupitt/ruby-vips#installation-prerequisites) information on how to install it.
+
 
 License
 -------
