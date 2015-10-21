@@ -1,5 +1,9 @@
 language: ruby
 bundler_args: --without debug
+sudo: required
+before_install:
+  - sudo apt-get install -qq libvips-dev libgsf-1-dev
+  - export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
 script: "bundle exec rspec spec"
 env:
   - CI=true
@@ -11,7 +15,6 @@ rvm:
   - jruby
   # - rbx-2 disabled to speed up CI. Renable when needed.
 cache: bundler
-sudo: false
 matrix:
   allow_failures:
     - rvm: 1.9.3
