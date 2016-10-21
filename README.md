@@ -1,7 +1,7 @@
 Rack::IIIF
 ==========
 
-[![Build Status](https://travis-ci.org/IIIF/rack-iiif.svg?branch=develop)](https://travis-ci.org/IIIF/rack-iiif)
+[![Build Status](https://travis-ci.org/jpstroop/rack-iiif.svg?branch=develop)](https://travis-ci.org/IIIF/rack-iiif)
 [![Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](./UNLICENSE)
 
 [WIP]
